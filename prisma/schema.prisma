@@ -12,3 +12,39 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model User {
+  id          Int      @id @default(autoincrement())
+  name        String?
+  email       String   @unique
+  password    String
+  role        Role     @default(PARTICIPANT)
+  createdAt   DateTime @default(now()) @map(name: "created_at")
+  updatedAt   DateTime @updatedAt @map(name: "updated_at")
+  seminars    SeminarsOnUsers[]
+}
+
+model Seminar {
+  id          Int      @id @default(autoincrement())
+  theme       String
+  seminar_day DateTime
+  createdAt   DateTime @default(now()) @map(name: "created_at")
+  updatedAt   DateTime @updatedAt @map(name: "updated_at")
+  users SeminarsOnUsers[]
+}
+
+model SeminarsOnUsers {
+  user       User    @relation(fields: [userId], references: [id])
+  userId     Int
+  seminar   Seminar @relation(fields: [seminarId], references: [id])
+  seminarId Int
+  assignedAt DateTime @default(now())
+  assignedBy String
+
+  @@id([userId, seminarId])
+}
+
+enum Role {
+  PARTICIPANT
+  ORGANIZER
+}
