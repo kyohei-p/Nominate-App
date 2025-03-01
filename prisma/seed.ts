@@ -13,7 +13,7 @@ async function main() {
     create: {
       name: 'test',
       email: 'test@example.com',
-      password: hashedPassword,
+      password: password,
       role: 'PARTICIPANT'
     }
   })
